@@ -176,8 +176,10 @@ class AthenaModule(object):
     _importExpression = re.compile('^// import (.+)$', re.MULTILINE)
     def _extractImports(self, fileObj):
         s = fileObj.read()
+        imports = []
         for m in self._importExpression.finditer(s):
-            yield self.getOrCreate(m.group(1).decode('ascii'), self.mapping)
+            imports.append(self.getOrCreate(m.group(1).decode('ascii'), self.mapping))
+        return imports
 
 
 
@@ -186,7 +188,7 @@ class AthenaModule(object):
         Calculate our dependencies given the path to our source.
         """
         depgen = self._extractImports(file(jsFile, 'rU'))
-        return self.packageDeps + dict.fromkeys(depgen).keys()
+        return depgen + self.packageDeps
 
 
     def dependencies(self):
