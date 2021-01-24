@@ -90,7 +90,7 @@ def activeChannel(request):
 class MappingResource(object):
     """
     L{inevow.IResource} which looks up segments in a mapping between symbolic
-    names and the files they correspond to. 
+    names and the files they correspond to.
 
     @type mapping: C{dict}
     @ivar mapping: A map between symbolic, requestable names (eg,
@@ -1328,7 +1328,8 @@ class LivePage(rend.Page, _HasJSClass, _HasCSSModule):
 
     def callRemote(self, methodName, *args):
         requestID = 's2c%i' % (self._requestIDCounter(),)
-        message = ('call', (str(methodName, 'ascii'), requestID, args))
+        #message = ('call', (str(methodName, 'ascii'), requestID, args))
+        message = ('call', (methodName, requestID, args))
         resultD = defer.Deferred()
         self._remoteCalls[requestID] = resultD
         self.addMessage(message)
@@ -1805,7 +1806,8 @@ class _LiveMixin(_HasJSClass, _HasCSSModule):
         return self.page.callRemote(
             "Nevow.Athena.callByAthenaID",
             self._athenaID,
-            str(methodName, 'ascii'),
+            #str(methodName, 'ascii'),
+            methodName,
             varargs)
 
 

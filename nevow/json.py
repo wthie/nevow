@@ -40,6 +40,11 @@ class NevowJSONEncoder(json.JSONEncoder):
                 if isinstance(obj, type(None)):
                     return 'null'
                 else:
+                    if isinstance(obj, bytes):          # todo problematic, need more info
+                        try:
+                            obj = obj.decode("utf-8")
+                        except UnicodeDecodeError:
+                            print('JSON', obj)
                     return json.dumps(obj)
             else:
                 _w('(new ' + transportable.jsClass + '(')
@@ -50,7 +55,7 @@ class NevowJSONEncoder(json.JSONEncoder):
                         _w(',')
                 _w('))')
                 return "".join(res)
-    
+
 
 class NevowJSONDecoder(json.JSONDecoder):
     """a json.JSONDecoder with logic for decoding the extra types
@@ -66,6 +71,7 @@ def dumps(obj, **kwargs):
     list, tuple, or dictionary the JSON-encoded form of which will be
     returned.
     """
+    print('JSONencoder', obj)
     return NevowJSONEncoder(**kwargs).encode(obj)
 
 
